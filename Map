@@ -1,0 +1,193 @@
+float m_typeMap;
+float m_xStart = 0.0;
+float m_yStart = 300.0;
+float m_tile = 25.0;
+int[] m_fullmap = new int[1024];
+int[] m_templateMap = new int[4];
+int[] m_map ={0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0};
+int[] m_map1 = new int[64];
+int[] m_map2 = new int[64];
+int[] m_map3 = new int[64];
+int m_cols = 8;
+void setup()
+{
+  for(int tilemapNum = 0; tilemapNum < 4; tilemapNum++)
+  {
+    m_typeMap = random(0, 3);
+    m_templateMap[tilemapNum] = (int)m_typeMap;
+    //if(tilemapNum % 2 == 1)  m_templateMap[tilemapNum] = 2; 
+    
+  }
+  setMapType(m_templateMap[0], m_map);
+  setMapType(m_templateMap[1], m_map1);
+  setMapType(m_templateMap[2], m_map2);
+  setMapType(m_templateMap[3], m_map3);
+  
+  
+  drawBuilding(m_map);
+  drawBuilding(m_map1);
+  drawBuilding(m_map2);
+  drawBuilding(m_map3);
+  
+  size(800,600);
+  background(0);
+  
+  
+}
+
+void draw()
+{
+  for(int i = 0; i < 4; i++)
+  {
+    int rowNum = i / 2;
+    int colNum = i % 2;
+    float x = m_xStart + rowNum * m_tile * m_cols + colNum * m_tile * m_cols;
+    float y = m_yStart - (colNum * m_tile)/2 * m_cols + rowNum * m_tile/2 * m_cols;
+   if(i == 0)
+   {
+      drawMap(x, y, m_map1);
+   }
+    if(i == 1)
+    {
+      drawMap(x, y, m_map1);
+      
+    }
+    if(i == 2)
+    {
+      drawMap(x, y, m_map2);
+    }
+    if(i == 3)
+    {
+      drawMap(x, y, m_map3);
+    }
+  }
+}
+//draw map================================================================================================
+void drawMap(float m_xStart, float m_yStart, int[] map)
+{
+  for(int i = 0; i < 64; i++)
+  { 
+    int rowNum = i / m_cols;
+    int colNum = i % m_cols;
+    float x = m_xStart + rowNum * m_tile + colNum * m_tile;
+    float y = m_yStart - (colNum * m_tile)/2 + rowNum * m_tile/2;
+    if(map[i] == 1)
+    {
+      fill(#666666);
+    }
+    else if(map[i] == 5)
+    {
+      fill(#D2691E);
+    }
+    else
+    {
+      fill(#AAAAAA);
+    }  
+    drawTile(x, y, m_tile);
+  }
+}
+//draw a tile map================================================================================================
+void drawTile(float x, float y, float tile)
+{
+  quad(x, y, 
+       x + tile, y - 0.5 * tile, 
+       x + 2 * tile, y,  
+       x + tile, y + 0.5 * tile);
+}
+//set map type================================================================================================
+void setMapType(int typeMap, int[] map)
+{
+  if(typeMap == 0)
+  {
+    int tempMap[] ={0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    1,1,1,1,1,1,1,1,
+                    1,1,1,1,1,1,1,1,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0};
+    for(int i = 0; i < 64; i++)
+    {
+     map[i] = tempMap[i];
+    }
+  }
+  else if(typeMap == 1)
+  {
+    int tempMap[] ={0,0,0,1,1,0,0,0,
+                    0,0,0,1,1,0,0,0,
+                    0,0,0,1,1,0,0,0,
+                    1,1,1,1,1,1,1,1,
+                    1,1,1,1,1,1,1,1,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0};
+    for(int i = 0; i < 64; i++)
+    {
+     map[i] = tempMap[i];
+    }
+  }
+  else if(typeMap == 2)
+  {
+    int tempMap[] ={0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,
+                    1,1,1,1,1,1,1,1,
+                    1,1,1,1,1,1,1,1,
+                    0,0,0,1,1,0,0,0,
+                    0,0,0,1,1,0,0,0,
+                    0,0,0,1,1,0,0,0};
+    for(int i = 0; i < 64; i++)
+    {
+     map[i] = tempMap[i];
+    }
+  }
+
+}
+//draw building================================================================================================
+void drawBuilding(int[] map)
+{
+  for(int i = 0; i< 64 ; i++)
+  {
+    if(map[i] == 0)
+    {
+      int IsBuild = (int)random(0, 5);
+      if(IsBuild <= 3)
+      {
+        map[i] = 5;
+      }
+      else
+      {
+        map[i] = 0;
+      }
+    }
+  }
+}
+//change map type================================================================================================
+void mousePressed()
+{
+  for(int tilemapNum = 0; tilemapNum < 4; tilemapNum++)
+    {
+      m_typeMap = random(0, 3);
+      m_templateMap[tilemapNum] = (int)m_typeMap;
+      //if(tilemapNum % 2 == 1)  m_templateMap[tilemapNum] = 2; 
+      
+    }
+    setMapType(m_templateMap[0], m_map);
+    setMapType(m_templateMap[1], m_map1);
+    setMapType(m_templateMap[2], m_map2);
+    setMapType(m_templateMap[3], m_map3);
+    
+    
+    drawBuilding(m_map);
+    drawBuilding(m_map1);
+    drawBuilding(m_map2);
+    drawBuilding(m_map3);
+}
