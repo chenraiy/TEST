@@ -1,8 +1,8 @@
 float m_typeMap;
 float m_xStart = 0.0;
 float m_yStart = 300.0;
-float m_tile = 25.0;
-int[] m_fullmap = new int[1024];
+float m_tile = 32.0;
+//int[] m_fullmap = new int[1024];
 int[] m_templateMap = new int[4];
 int[] m_map ={0,0,0,0,0,0,0,0,
               0,0,0,0,0,0,0,0,
@@ -12,6 +12,7 @@ int[] m_map ={0,0,0,0,0,0,0,0,
               0,0,0,0,0,0,0,0,
               0,0,0,0,0,0,0,0,
               0,0,0,0,0,0,0,0};
+PImage m_spritePikachu;
 int[] m_map1 = new int[64];
 int[] m_map2 = new int[64];
 int[] m_map3 = new int[64];
@@ -36,7 +37,8 @@ void setup()
   drawBuilding(m_map2);
   drawBuilding(m_map3);
   
-  size(800,600);
+  m_spritePikachu = loadImage("Pikachu2.png");
+  size(800, 600, P3D);
   background(0);
   
   
@@ -52,7 +54,7 @@ void draw()
     float y = m_yStart - (colNum * m_tile)/2 * m_cols + rowNum * m_tile/2 * m_cols;
    if(i == 0)
    {
-      drawMap(x, y, m_map1);
+      drawMap(x, y, m_map);
    }
     if(i == 1)
     {
@@ -78,6 +80,7 @@ void drawMap(float m_xStart, float m_yStart, int[] map)
     int colNum = i % m_cols;
     float x = m_xStart + rowNum * m_tile + colNum * m_tile;
     float y = m_yStart - (colNum * m_tile)/2 + rowNum * m_tile/2;
+    drawTile(x, y, m_tile);
     if(map[i] == 1)
     {
       fill(#666666);
@@ -88,18 +91,25 @@ void drawMap(float m_xStart, float m_yStart, int[] map)
     }
     else
     {
-      fill(#AAAAAA);
-    }  
-    drawTile(x, y, m_tile);
+      fill(#666666);
+    }
   }
 }
 //draw a tile map================================================================================================
 void drawTile(float x, float y, float tile)
 {
-  quad(x, y, 
+  noStroke();
+  beginShape(QUADS);
+  texture(m_spritePikachu);
+  vertex(x, y, 0, 0);
+  vertex(x + tile, y - 0.5 * tile, 22, 0);
+  vertex(x + 2 * tile, y, 22, 32);
+  vertex(x + tile, y + 0.5 * tile, 0, 32);
+  endShape();
+  /*quad(x, y, 
        x + tile, y - 0.5 * tile, 
        x + 2 * tile, y,  
-       x + tile, y + 0.5 * tile);
+       x + tile, y + 0.5 * tile);*/
 }
 //set map type================================================================================================
 void setMapType(int typeMap, int[] map)
